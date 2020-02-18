@@ -114,14 +114,14 @@ fig = px.histogram(rfmTable, x="Frequency", y="CustomerID", marginal="box", # or
                    hover_data=rfmTable.columns, title='Frequency Plot')
 fig.show()
 ```
-![Recency Plot](images/FrequencyHistogramPlot)
+![Frequency Plot](images/FrequencyHistogramPlot)
 ```Python
 #monetary value
 fig = px.histogram(rfmTable, x="MonetaryValue", y="CustomerID", marginal="box", # or violin, rug
                    hover_data=rfmTable.columns, title='Monetary Value Plot')
 fig.show()
 ```
-![Recency Plot](images/MonetaryValueHistogramPlot)
+![Monetary Value Plot](images/MonetaryValueHistogramPlot)
 ```Python
 #Q-Q plot of the quantiles of x versus the quantiles/ppf of a distribution.
 # set up the plot figure
