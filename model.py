@@ -1,8 +1,8 @@
-
 ##########################################################################################################################################
 ### RFM MODEL ###
 ##########################################################################################################################################
-
+import plotly.express as px
+import statsmodels.api as sm
 import pandas as pd
 import numpy as np
 import warnings
@@ -36,7 +36,7 @@ today = rfmTable.InvoiceDate.max() #use the latest date in the dataset - in the 
 rfmTable['Recency'] = (today - rfmTable['InvoiceDate']).dt.days #Days since last order
 
 ##########################################################################################################################################
-### RFM Score Function ###
+### Stats Tests ###
 ##########################################################################################################################################
 
 # first rename the columns to a more user friendly format
@@ -45,6 +45,39 @@ rfmTable = rfmTable.rename(columns={
     }
 )
 
+#show distribution of values
+#recency
+fig = px.histogram(rfmTable, x="Recency", y="CustomerID", marginal="box", # or violin, rug
+                   hover_data=rfmTable.columns, title='Recency Plot')
+fig.show()
+
+#frequency
+fig = px.histogram(rfmTable, x="Frequency", y="CustomerID", marginal="box", # or violin, rug
+                   hover_data=rfmTable.columns, title='Frequency Plot')
+fig.show()
+
+#monetary value
+fig = px.histogram(rfmTable, x="MonetaryValue", y="CustomerID", marginal="box", # or violin, rug
+                   hover_data=rfmTable.columns, title='Monetary Value Plot')
+fig.show()
+
+#Q-Q plot of the quantiles of x versus the quantiles/ppf of a distribution.
+# set up the plot figure
+from statsmodels.graphics.gofplots import qqplot
+from matplotlib import pyplot as plt
+f, axes = plt.subplots(2, 2, figsize=(20,12))
+
+#define distribution graphs
+qqplot(rfmTable.Recency, line='r', ax=axes[0,0], label='Recency')
+qqplot(rfmTable.Frequency, line='r', ax=axes[0,1], label='Frequency')
+qqplot(rfmTable.MonetaryValue, line='r', ax=axes[1,0], label='MonetaryValue')
+
+#plot all
+plt.tight_layout()
+
+##########################################################################################################################################
+### RFM Score Function ###
+##########################################################################################################################################
 # Detemine the dataset quantiles
 q = np.arange(0, 1, 0.10).tolist()
 quantiles = rfmTable.quantile(q=np.around(q,decimals=2))
@@ -57,7 +90,7 @@ rfmSegmentation = rfmTable[['CustomerID','MonetaryValue','Frequency','Recency']]
 
 # We created to classes where high recency is bad and high frequency/ money is good
 
-# 1. Arguments (x = value, p = recency, monetary_value, frequency, k = quartiles dict)
+# 1. Arguments (x = value, work on intervals of 90 days)
 def RClass(x):
     if x <= 90:
         return 1
@@ -72,7 +105,7 @@ def RClass(x):
     else:
         return 6
     
-# 2. Arguments (x = value, p = recency, frequency)
+# 2. Arguments (x = value, p = frequency)
 def FClass(x,p,d):
     if x <= d[p][0.3]:
         return 6
@@ -87,7 +120,7 @@ def FClass(x,p,d):
     else:
         return 1
     
-# 3. Arguments (x = value, p = recency, monetary_value, frequency)
+# 3. Arguments (x = value, p = monetary_value)
 def MClass(x,p,d):
     if x <= d[p][0.2]:
         return 6
@@ -102,7 +135,7 @@ def MClass(x,p,d):
     else:
         return 1
 
-# 4. Customer Segment Arguments (x = value, a = recency, b = frequency, c = monetary_value)
+# 4. Customer Segment Arguments (x = value, slice by value distribution in order to segment stage)
 
 def CustomerSegment(x):
     if x['R_Quartile'] ==1 and x['F_Quartile'] ==1 and x['M_Quartile'] ==1:
@@ -149,6 +182,12 @@ rfmSegmentation['RFMClass'] = rfmSegmentation.R_Quartile.map(str) \
 # Classify customer segments based on RFM scores
 
 rfmSegmentation['Customer Segment'] = rfmSegmentation.apply(lambda x: CustomerSegment(x), axis=1)
+
+#scatter plot to display segments
+rfm_scatter = rfmSegmentation[(rfmSegmentation['MonetaryValue'] > 0) & (rfmSegmentation['Recency'] <=360) & (rfmSegmentation['Frequency'] <= 50)]
+fig = px.scatter(rfm_scatter, x="Recency", y="Frequency", color="Customer Segment",
+                 size='MonetaryValue', hover_data=['R_Quartile', 'F_Quartile', 'M_Quartile'])
+fig.show()
 
 # Save the results to a csv file
 output_table = rfmSegmentation.to_csv('rfm_segments.csv')
