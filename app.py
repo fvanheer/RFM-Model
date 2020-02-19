@@ -17,14 +17,25 @@ def load_data():
     return data
 
 data = load_data()
-recency = st.sidebar.number_input('Smaller Than Recency', 0, 360, 180)
-frequency= st.sidebar.number_input('Smaller Than Frequency', 0, 100, 25)
-monetaryValue = st.sidebar.number_input('Smaller Than Monetary Value', 0, 100000, 25000)
+segments = data['Customer Segment'].unique()
+
+#build app filters
+column = st.sidebar.multiselect('Select Segments', segments)
+recency = st.sidebar.number_input('Smaller Than Recency', 0, 360, 360)
+frequency= st.sidebar.number_input('Smaller Than Frequency', 0, 100, 100)
+monetaryValue = st.sidebar.number_input('Smaller Than Monetary Value', 0, 100000, 100000)
 
 data = data[(data['Recency']<=recency) & (data['Frequency']<=frequency) & (data['MonetaryValue']<=monetaryValue)]
 
+#manage the multiple field filter
+if column == []:
+    data = data
+else:
+    data = data[data['Customer Segment'].isin(column)]
+
 data
 
+st.subheader('RFM Scatter Plot')
 #scatter plot
 fig_scatter = px.scatter(data, x="Recency", y="Frequency", color="Customer Segment",
                  size='MonetaryValue', hover_data=['R_Quartile', 'F_Quartile', 'M_Quartile'])

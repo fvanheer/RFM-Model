@@ -40,6 +40,13 @@ matplotlib
 
 You can find the code in the model model.py file 
 
+### Review the Output of the model
+After running the model and writing the csv file. You can use a basic streamlit app also included in the repository names app.py. The app will allow you to do analyse and review a number of variable in the output in order to optimise your model. Male sure that you are in the project folder.  
+```
+streamlit run app.py
+```
+Access the app vis the localhost link provided in command line. 
+
 ### Import the libraries and dataset
 
 ```Python
@@ -263,13 +270,6 @@ fig.show()
 output_table = rfmSegmentation.to_csv('rfm_segments.csv')
 ```
 ![Segment Scatter Plot](images/rfmScatter.png)
-
-### Review the Output of the model
-After running the model and writing the csv file. You can use a basic streamlit app also included in the repository names app.py. The app will allow you to do analyse and review a number of variable in the output in order to optimise your model. Below the steps to run this app. 
-```
-streamlit run app.py
-```
-Access the app vis the localhost link provided in command line. 
 
 ### Deployment options
 
