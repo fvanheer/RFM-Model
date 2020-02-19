@@ -190,6 +190,6 @@ fig = px.scatter(rfm_scatter, x="Recency", y="Frequency", color="Customer Segmen
 fig.show()
 
 # Save the results to a csv file
-output_table = rfmSegmentation.to_csv('rfm_segments.csv')
+rfmSegmentation.to_csv('rfm_segments.csv')
 
 print('RFM Calculation Completed!')

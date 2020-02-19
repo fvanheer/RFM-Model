@@ -264,6 +264,13 @@ output_table = rfmSegmentation.to_csv('rfm_segments.csv')
 ```
 ![Segment Scatter Plot](images/rfmScatter.png)
 
+### Review the Output of the model
+After running the model and writing the csv file. You can use a basic streamlit app also included in the repository names app.py. The app will allow you to do analyse and review a number of variable in the output in order to optimise your model. Below the steps to run this app. 
+```
+streamlit run app.py
+```
+Access the app vis the localhost link provided in command line. 
+
 ### Deployment options
 
 * Include the computations as a part of your ETL process (I use [KNIME](https://www.knime.com/)) - Include it as a step before writing the final customer lifetime table to your Data Warehouse.
