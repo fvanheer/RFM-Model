@@ -30,6 +30,7 @@ numpy
 scipy
 statsmodels
 matplotlib
+streamlit
 ```
 
 ### Data
