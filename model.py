@@ -92,11 +92,11 @@ rfmSegmentation = rfmTable[['CustomerID','MonetaryValue','Frequency','Recency']]
 
 # 1. Arguments (x = value, work on intervals of 90 days)
 def RClass(x):
-    if x <= 90:
+    if x <= 60:
         return 1
-    elif x <= 180:
+    elif x <= 120:
         return 2
-    elif x <= 270: 
+    elif x <= 180: 
         return 3
     elif x <= 360: 
         return 4

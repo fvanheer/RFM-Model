@@ -42,11 +42,11 @@ streamlit
 You can find the code in the model model.py file 
 
 ### Review the Output of the model
-After running the model and writing the csv file. You can use a basic streamlit app also included in the repository names app.py. The app will allow you to do analyse and review a number of variable in the output in order to optimise your model. Male sure that you are in the project folder.  
+After running the model and writing the csv file. You can also use a basic streamlit app included in the repository names app.py. The app will allow you to do analyse and review RFM scores in the output data. This is useful for model optimisation. You can run the app with the following command:  
 ```
 streamlit run app.py
 ```
-Access the app vis the localhost link provided in command line. 
+Access the app via the localhost link.
 
 ### Import the libraries and dataset
 
@@ -165,11 +165,11 @@ rfmSegmentation = rfmTable[['CustomerID','MonetaryValue','Frequency','Recency']]
 # We created to classes where high recency is bad and high frequency/ money is good
 # 1. Arguments (x = value, work on intervals of 90 days)
 def RClass(x):
-    if x <= 90:
+    if x <= 60:
         return 1
-    elif x <= 180:
+    elif x <= 120:
         return 2
-    elif x <= 270: 
+    elif x <= 180: 
         return 3
     elif x <= 360: 
         return 4
@@ -274,9 +274,9 @@ output_table = rfmSegmentation.to_csv('rfm_segments.csv')
 
 ### Deployment options
 
-* Include the computations as a part of your ETL process (I use [KNIME](https://www.knime.com/)) - Include it as a step before writing the final customer lifetime table to your Data Warehouse.
-* Have it run on a monthly cycle - then you have snapshots of how customers progress through the different segments over time. It is a great way to track if you are feeding enough customers into active segments to feed your MVP (most profitable customers).
-* Trigger events based on scores or segments with your CRM or campaign management system.  
+* Include the computations as a part of your ETL process (I use [KNIME](https://www.knime.com/)) - as the step before writing the final customer lifetime table to your Data Warehouse.
+* Have the model run on a monthly cycle - then you have snapshots of how customers progress through the different segments over time. It is a great way to track if you are feeding enough customers into active segments to feed your MVP (most profitable customers).
+* Trigger events based on scores or segments with your CRM or campaign management system (On-boarding, Retention and Reactivation campaigns).  
 
 ## Author
 
@@ -284,5 +284,5 @@ output_table = rfmSegmentation.to_csv('rfm_segments.csv')
 
 ## Acknowledgments
 
-* Found inspiration from multiple fellow Data Scientists in the open source community
-* But I would like to specifically highlight this post [How to segment customer with RFM analysis](https://joaocorreia.io/blog/rfm-analysis-increase-sales-by-segmenting-your-customers.html) 
+* Found inspiration from multiple fellow Data Scientists in the open source community.
+* But I would like to specifically highlight this post [How to segment customers with RFM analysis](https://joaocorreia.io/blog/rfm-analysis-increase-sales-by-segmenting-your-customers.html) 
